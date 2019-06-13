@@ -1,0 +1,73 @@
+﻿@model IEnumerable<webPracA.Models.ExamPlan>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Список экзаменов</h2>
+<p>
+    @Html.ActionLink("Создать новый", "Create")
+</p>
+@using (Html.BeginForm())
+{
+    <p>
+        Поиск по номеру группы: @Html.TextBox("searchString", null, htmlAttributes: new { @style = "form-control" })
+        <input type="submit" value="Поиск" />
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            Группа
+        </th>
+        <th>
+            Предмет
+        </th>
+        <th>
+            Преподаватель
+        </th>
+        <th>
+            Дата
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Group.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lesson.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Teacher.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExamDate)
+            </td>
+            <td>
+                @Html.ActionLink("Результаты", "Index", "ExamResults", new { gId = item.Group.Id, lId = item.Lesson.Id }, null)
+            </td>
+            <td>
+                @if (User.Identity.Name == "admin")
+                {
+                    @Html.ActionLink("Изменить", "Edit", new { id = item.Id })<span> | </span>
+                    @Html.ActionLink("Детали", "Details", new { id = item.Id })<span> | </span>
+                    @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
+                }
+            </td>
+        </tr>
+    }
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td colspan="5" style="text-align:center">Нет результатов</td>
+            <td></td>
+        </tr>
+    }
+
+</table>

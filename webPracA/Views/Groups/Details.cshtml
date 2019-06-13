@@ -1,0 +1,23 @@
+﻿@model webPracA.Models.Group
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Детали</h2>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            Номер группы
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Number)
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Изменить", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Обратно к списку", "Index")
+</p>

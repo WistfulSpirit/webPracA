@@ -1,0 +1,48 @@
+﻿@model webPracA.Models.ExamResult
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Детали</h2>
+
+<div>
+    <h4>Результат по предмету - @Model.ExamPlan.Lesson.Name </h4>
+    <hr />
+    <dl class="dl-horizontal">
+        
+        <dt>
+            Студент
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student.Name)
+        </dd>
+
+        <dt>
+            Оценка
+        </dt>
+
+        <dd>
+            @if (Model.MarkVal == null)
+            {
+                <span>нет оценки</span>
+            }
+            else if (Model.MarkVal > 1)
+            {
+                @Html.DisplayFor(modelItem => modelItem.MarkVal)
+                <span>(</span>@Html.DisplayFor(modelItem => modelItem.Mark.Name)<span>)</span>
+            }
+            else
+            {
+                @Html.DisplayFor(modelItem => modelItem.Mark.Name)
+            }
+        </dd>
+
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Редактировать", "Edit", new { pId = Model.ExamPlanId, sId = Model.StudentId }) |
+    @Html.ActionLink("Обратно к списку", "Index", new { lId = Model.ExamPlan.LessonId, gId = Model.ExamPlan.GroupId })
+</p>

@@ -1,0 +1,97 @@
+﻿@*@model IEnumerable<webPrac.Models.ExamResult>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ExamPlan.GroupNum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mark.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student.Name)
+            </th>
+            <th></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExamPlan.GroupNum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mark.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.Name)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+    }
+
+    </table>*@
+@model IEnumerable<webPracA.Models.GetExamResults_Result>
+@Scripts.Render("~/scripts/jquery-3.3.1.js")
+@Scripts.Render("~/scripts/jquery.unobtrusive-ajax.js")
+<table class="table" id="forAjax">
+    <tr>
+        <th colspan="3" style="text-align: center">
+            Предмет - @ViewData["LN"]
+        </th>
+    </tr>
+    <tr>
+        <th colspan="3" style="text-align: center">
+            Преподаватель - @ViewData["TN"]
+        </th>
+    </tr>
+    <tr>
+        <th>
+            @Html.ActionLink("Студент", "Index", new { gId = ViewBag.GL, lId = ViewBag.LL, sortOrder = ViewBag.NameSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Оценка", "Index", new { gId = ViewBag.GL, lId = ViewBag.LL, sortOrder = ViewBag.MarkSortParm })
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudentName)
+            </td>
+            <td>
+                @if (item.MarkVal == null)
+                {
+                    <span>нет оценки</span>
+                }
+                else if (item.MarkVal > 1)
+                {
+                    @Html.DisplayFor(modelItem => item.MarkVal)
+                    <span>(</span>@Html.DisplayFor(modelItem => item.MarkName)<span>)</span>
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.MarkName)
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { pId = item.RExamPlanId, sId = item.RStudentId }) |
+                @Html.ActionLink("Details", "Details", new { pId = item.RExamPlanId, sId = item.RStudentId })
+            </td>
+        </tr>
+    }
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td colspan="5" style="text-align:center">Нет результатов</td>
+            <td></td>
+        </tr>
+    }
+</table>

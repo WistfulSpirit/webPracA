@@ -1,0 +1,142 @@
+﻿@model IEnumerable<webPracA.Models.GetExamResults_Result>
+@Scripts.Render("~/scripts/jquery-3.3.1.js")
+@Scripts.Render("~/scripts/jquery.unobtrusive-ajax.js")
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Результаты экзаменов</h2>
+@Html.ActionLink("Экспорт в Excel","Export", new {gId = ViewBag.GroupList.SelectedValue, lId = ViewBag.LessonList.SelectedValue })
+<div>
+    @{if (User.Identity.Name == "admin")
+        {
+            using (Ajax.BeginForm("ShowExamList", "ExamResults", new AjaxOptions { UpdateTargetId = "forAjax" }, htmlAttributes: new { id = "listsAjax", @class = "form-inline" }))
+            {
+                <span class="control-label"><b>Выберите группу   </b></span>@Html.DropDownList("GroupList", null, htmlAttributes: new { id = "selGroup", @class = "form-control" });<br /><br />
+                <span class="control-label"><b>Выберите предмет   </b></span>@Html.DropDownList("LessonList", null, htmlAttributes: new { id = "selLes", @class = "form-control" });<br /><br />
+                <span><input type="submit" value="Показать" class="btn btn-default" /></span><br /><br />
+            }
+        }
+        else
+        {
+            using (Ajax.BeginForm("ShowExamListT", "ExamResults", new AjaxOptions { UpdateTargetId = "forAjax" }, htmlAttributes: new { id = "listsAjax", @class = "form-inline" }))
+            {
+                //добавить hidden/hiddenfor для teacherId который из куки и добавить в контроллер перегрузку ShowExamList(,,)
+                <input id="tId" name="TeacherId" type="hidden" value=@User.Identity.Name />
+                <span class="control-label"><b>Выберите предмет   </b></span>@Html.DropDownList("LessonList", null, htmlAttributes: new { id = "selLesT", @class = "form-control" });<br /><br />
+                <span class="control-label"><b>Выберите группу   </b></span>@Html.DropDownList("GroupList", null, htmlAttributes: new { id = "selGroupT", @class = "form-control" });<br /><br />
+                <span><input type="submit" value="Показать" class="btn btn-default" /></span><br /><br />
+            }
+        }
+    }
+</div>
+
+<table class="table" id="forAjax">
+    <tr>
+        <th colspan="3" style="text-align: center">
+            Предмет - @ViewData["LN"]
+        </th>
+    </tr>
+    <tr>
+        <th colspan="3" style="text-align: center">
+            Преподаватель - @ViewData["TN"]
+        </th>
+    </tr>
+    <tr>
+        <th>
+            @Html.ActionLink("Студент", "Index", new { gId = ViewBag.GroupList.SelectedValue, lId = ViewBag.LessonList.SelectedValue, sortOrder = ViewBag.NameSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Оценка", "Index", new { gId = ViewBag.GroupList.SelectedValue, lId = ViewBag.LessonList.SelectedValue, sortOrder = ViewBag.MarkSortParm })
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudentName)
+            </td>
+            <td>
+                @if (item.MarkVal == null)
+                {
+                    <span>нет оценки</span>
+                }
+                else if (item.MarkVal > 1)
+                {
+                    @Html.DisplayFor(modelItem => item.MarkVal)
+                    <span>(</span>@Html.DisplayFor(modelItem => item.MarkName)<span>)</span>
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.MarkName)
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { pId = item.RExamPlanId, sId = item.RStudentId }) |
+                @Html.ActionLink("Details", "Details", new { pId = item.RExamPlanId, sId = item.RStudentId })
+            </td>
+        </tr>
+    }
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td colspan="5" style="text-align:center">Нет результатов</td>
+            <td></td>
+        </tr>
+    }
+
+</table>
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#selGroup').change(function () {
+                    var num = $(this).val();
+            $.ajax({
+                        type: 'GET',
+                url: '@Url.Action("GetLessonList")?gId=' + num,
+                success: function (data) {
+                    $('#selLes').replaceWith(data);
+                        },
+                error: function (error) {
+                            alert("error::" + error);
+                        }
+                    });
+                });
+        $('#selLesT').change(function () {
+                    var l = $(this).val();
+                    var t = $('#tId').val().replace('/', '');
+            //var link = 'Html.Raw(Url.Action("GetGroupList", new { tId =-1, lId =-2}))';//.replace('-1', t).replace('-2', l);
+            //link.replace('-1', t);
+            //link.replace('-2', l);
+            $.ajax({
+                        type: 'GET',
+                url: '@Url.Action("GetGroupList")',
+                data: { tId: t, lId: l },
+                beforeSend: function () { console.log(URL);},
+                success: function (data) {
+                    $('#selGroupT').replaceWith(data);
+                        },
+                error: function (error) {
+                            alert("error::" + error);
+                        }
+                    });
+                });
+
+            })
+//    $(".selGroup").change()
+</script>
+@*
+    <td>
+                    @if (Session["LoggedTeacherId"] != null && !Session["LoggedTeacherId"].Equals("admin"))
+                    {
+                        <span>
+                            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                        </span>
+                    }
+                </td>
+*@

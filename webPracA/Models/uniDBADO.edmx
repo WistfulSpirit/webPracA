@@ -1,0 +1,559 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище uniDBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ExamPlan">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LessonId" Type="int" Nullable="false" />
+          <Property Name="GroupId" Type="int" Nullable="false" />
+          <Property Name="TeacherId" Type="int" Nullable="false" />
+          <Property Name="ExamDate" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExamResult">
+          <Key>
+            <PropertyRef Name="ExamPlanId" />
+            <PropertyRef Name="StudentId" />
+          </Key>
+          <Property Name="ExamPlanId" Type="int" Nullable="false" />
+          <Property Name="StudentId" Type="int" Nullable="false" />
+          <Property Name="MarkVal" Type="int" />
+        </EntityType>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Number" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Lesson">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Mark">
+          <Key>
+            <PropertyRef Name="Value" />
+          </Key>
+          <Property Name="Value" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="GroupId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Teacher">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Image" Type="image" />
+        </EntityType>
+        <Association Name="FK_ExamPlan_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="ExamPlan" Type="Self.ExamPlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamPlan">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamPlan_Lesson">
+          <End Role="Lesson" Type="Self.Lesson" Multiplicity="1" />
+          <End Role="ExamPlan" Type="Self.ExamPlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lesson">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamPlan">
+              <PropertyRef Name="LessonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamPlan_Teacher">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="1" />
+          <End Role="ExamPlan" Type="Self.ExamPlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamPlan">
+              <PropertyRef Name="TeacherId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamResult_ExamPlan">
+          <End Role="ExamPlan" Type="Self.ExamPlan" Multiplicity="1" />
+          <End Role="ExamResult" Type="Self.ExamResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExamPlan">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamResult">
+              <PropertyRef Name="ExamPlanId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamResult_Mark">
+          <End Role="Mark" Type="Self.Mark" Multiplicity="0..1" />
+          <End Role="ExamResult" Type="Self.ExamResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mark">
+              <PropertyRef Name="Value" />
+            </Principal>
+            <Dependent Role="ExamResult">
+              <PropertyRef Name="MarkVal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamResult_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="ExamResult" Type="Self.ExamResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamResult">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Student_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="Student" Type="Self.Student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="GetExamResults" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="lId" Type="int" Mode="In" />
+          <Parameter Name="gId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetResultsAndAvg" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="gId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="LoginByUP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="username" Type="varchar" Mode="In" />
+          <Parameter Name="password" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="Хранилище uniDBModelContainer">
+          <EntitySet Name="ExamPlan" EntityType="Self.ExamPlan" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExamResult" EntityType="Self.ExamResult" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lesson" EntityType="Self.Lesson" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Mark" EntityType="Self.Mark" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Teacher" EntityType="Self.Teacher" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ExamPlan_Group" Association="Self.FK_ExamPlan_Group">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="ExamPlan" EntitySet="ExamPlan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamPlan_Lesson" Association="Self.FK_ExamPlan_Lesson">
+            <End Role="Lesson" EntitySet="Lesson" />
+            <End Role="ExamPlan" EntitySet="ExamPlan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamPlan_Teacher" Association="Self.FK_ExamPlan_Teacher">
+            <End Role="Teacher" EntitySet="Teacher" />
+            <End Role="ExamPlan" EntitySet="ExamPlan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamResult_ExamPlan" Association="Self.FK_ExamResult_ExamPlan">
+            <End Role="ExamPlan" EntitySet="ExamPlan" />
+            <End Role="ExamResult" EntitySet="ExamResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamResult_Mark" Association="Self.FK_ExamResult_Mark">
+            <End Role="Mark" EntitySet="Mark" />
+            <End Role="ExamResult" EntitySet="ExamResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamResult_Student" Association="Self.FK_ExamResult_Student">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="ExamResult" EntitySet="ExamResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Student_Group" Association="Self.FK_Student_Group">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="Student" EntitySet="Student" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="uniDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ExamPlan">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LessonId" Type="Int32" Nullable="false" />
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <Property Name="TeacherId" Type="Int32" Nullable="false" />
+          <Property Name="ExamDate" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Group" Relationship="Self.FK_ExamPlan_Group" FromRole="ExamPlan" ToRole="Group" />
+          <NavigationProperty Name="Lesson" Relationship="Self.FK_ExamPlan_Lesson" FromRole="ExamPlan" ToRole="Lesson" />
+          <NavigationProperty Name="Teacher" Relationship="Self.FK_ExamPlan_Teacher" FromRole="ExamPlan" ToRole="Teacher" />
+          <NavigationProperty Name="ExamResult" Relationship="Self.FK_ExamResult_ExamPlan" FromRole="ExamPlan" ToRole="ExamResult" />
+        </EntityType>
+        <EntityType Name="ExamResult">
+          <Key>
+            <PropertyRef Name="ExamPlanId" />
+            <PropertyRef Name="StudentId" />
+          </Key>
+          <Property Name="ExamPlanId" Type="Int32" Nullable="false" />
+          <Property Name="StudentId" Type="Int32" Nullable="false" />
+          <Property Name="MarkVal" Type="Int32" />
+          <NavigationProperty Name="ExamPlan" Relationship="Self.FK_ExamResult_ExamPlan" FromRole="ExamResult" ToRole="ExamPlan" />
+          <NavigationProperty Name="Mark" Relationship="Self.FK_ExamResult_Mark" FromRole="ExamResult" ToRole="Mark" />
+          <NavigationProperty Name="Student" Relationship="Self.FK_ExamResult_Student" FromRole="ExamResult" ToRole="Student" />
+        </EntityType>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="ExamPlan" Relationship="Self.FK_ExamPlan_Group" FromRole="Group" ToRole="ExamPlan" />
+          <NavigationProperty Name="Student" Relationship="Self.FK_Student_Group" FromRole="Group" ToRole="Student" />
+        </EntityType>
+        <EntityType Name="Lesson">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="ExamPlan" Relationship="Self.FK_ExamPlan_Lesson" FromRole="Lesson" ToRole="ExamPlan" />
+        </EntityType>
+        <EntityType Name="Mark">
+          <Key>
+            <PropertyRef Name="Value" />
+          </Key>
+          <Property Name="Value" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="ExamResult" Relationship="Self.FK_ExamResult_Mark" FromRole="Mark" ToRole="ExamResult" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ExamResult" Relationship="Self.FK_ExamResult_Student" FromRole="Student" ToRole="ExamResult" />
+          <NavigationProperty Name="Group" Relationship="Self.FK_Student_Group" FromRole="Student" ToRole="Group" />
+        </EntityType>
+        <EntityType Name="Teacher">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Image" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="ExamPlan" Relationship="Self.FK_ExamPlan_Teacher" FromRole="Teacher" ToRole="ExamPlan" />
+        </EntityType>
+        <Association Name="FK_ExamPlan_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="ExamPlan" Type="Self.ExamPlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamPlan">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamPlan_Lesson">
+          <End Role="Lesson" Type="Self.Lesson" Multiplicity="1" />
+          <End Role="ExamPlan" Type="Self.ExamPlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lesson">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamPlan">
+              <PropertyRef Name="LessonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamPlan_Teacher">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="1" />
+          <End Role="ExamPlan" Type="Self.ExamPlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamPlan">
+              <PropertyRef Name="TeacherId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamResult_ExamPlan">
+          <End Role="ExamPlan" Type="Self.ExamPlan" Multiplicity="1" />
+          <End Role="ExamResult" Type="Self.ExamResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExamPlan">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamResult">
+              <PropertyRef Name="ExamPlanId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamResult_Mark">
+          <End Role="Mark" Type="Self.Mark" Multiplicity="0..1" />
+          <End Role="ExamResult" Type="Self.ExamResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mark">
+              <PropertyRef Name="Value" />
+            </Principal>
+            <Dependent Role="ExamResult">
+              <PropertyRef Name="MarkVal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamResult_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="ExamResult" Type="Self.ExamResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamResult">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Student_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="Student" Type="Self.Student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="uniDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ExamPlan" EntityType="Self.ExamPlan" />
+          <EntitySet Name="ExamResult" EntityType="Self.ExamResult" />
+          <EntitySet Name="Group" EntityType="Self.Group" />
+          <EntitySet Name="Lesson" EntityType="Self.Lesson" />
+          <EntitySet Name="Mark" EntityType="Self.Mark" />
+          <EntitySet Name="Student" EntityType="Self.Student" />
+          <EntitySet Name="Teacher" EntityType="Self.Teacher" />
+          <AssociationSet Name="FK_ExamPlan_Group" Association="Self.FK_ExamPlan_Group">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="ExamPlan" EntitySet="ExamPlan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamPlan_Lesson" Association="Self.FK_ExamPlan_Lesson">
+            <End Role="Lesson" EntitySet="Lesson" />
+            <End Role="ExamPlan" EntitySet="ExamPlan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamPlan_Teacher" Association="Self.FK_ExamPlan_Teacher">
+            <End Role="Teacher" EntitySet="Teacher" />
+            <End Role="ExamPlan" EntitySet="ExamPlan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamResult_ExamPlan" Association="Self.FK_ExamResult_ExamPlan">
+            <End Role="ExamPlan" EntitySet="ExamPlan" />
+            <End Role="ExamResult" EntitySet="ExamResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamResult_Mark" Association="Self.FK_ExamResult_Mark">
+            <End Role="Mark" EntitySet="Mark" />
+            <End Role="ExamResult" EntitySet="ExamResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamResult_Student" Association="Self.FK_ExamResult_Student">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="ExamResult" EntitySet="ExamResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Student_Group" Association="Self.FK_Student_Group">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="Student" EntitySet="Student" />
+          </AssociationSet>
+          <FunctionImport Name="GetExamResults" ReturnType="Collection(uniDBModel.GetExamResults_Result)">
+            <Parameter Name="lId" Mode="In" Type="Int32" />
+            <Parameter Name="gId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="LoginByUP" ReturnType="Collection(uniDBModel.LoginByUP_Result)">
+            <Parameter Name="username" Mode="In" Type="String" />
+            <Parameter Name="password" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetResultsAndAvg" ReturnType="Collection(uniDBModel.GetResultsAndAvg_Result)">
+          <Parameter Name="gId" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="GetExamResults_Result">
+          <Property Type="String" Name="LessonName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="TeacherName" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="GroupNum" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="StudentName" Nullable="false" MaxLength="150" />
+          <Property Type="Int32" Name="MarkVal" Nullable="true" />
+          <Property Type="String" Name="MarkName" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="ExamDate" Nullable="false" />
+          <Property Type="Int32" Name="RExamPlanId" Nullable="false" />
+          <Property Type="Int32" Name="RStudentId" Nullable="false" />
+          <Property Type="Int32" Name="RTeacherId" Nullable="false" />
+          <Property Type="Int32" Name="RGroupId" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="LoginByUP_Result">
+          <Property Type="Int32" Name="TeId" Nullable="false" />
+          <Property Type="String" Name="LgIn" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="PassWrd" Nullable="false" MaxLength="32" />
+        </ComplexType>
+        <ComplexType Name="GetResultsAndAvg_Result">
+          <Property Type="String" Name="StudentName" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="LessonName" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="MarkVal" Nullable="true" />
+          <Property Type="Double" Name="MarkAVG" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище uniDBModelContainer" CdmEntityContainer="uniDBEntities">
+          <EntitySetMapping Name="ExamPlan">
+            <EntityTypeMapping TypeName="uniDBModel.ExamPlan">
+              <MappingFragment StoreEntitySet="ExamPlan">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="LessonId" ColumnName="LessonId" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="TeacherId" ColumnName="TeacherId" />
+                <ScalarProperty Name="ExamDate" ColumnName="ExamDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExamResult">
+            <EntityTypeMapping TypeName="uniDBModel.ExamResult">
+              <MappingFragment StoreEntitySet="ExamResult">
+                <ScalarProperty Name="ExamPlanId" ColumnName="ExamPlanId" />
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+                <ScalarProperty Name="MarkVal" ColumnName="MarkVal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Group">
+            <EntityTypeMapping TypeName="uniDBModel.Group">
+              <MappingFragment StoreEntitySet="Group">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lesson">
+            <EntityTypeMapping TypeName="uniDBModel.Lesson">
+              <MappingFragment StoreEntitySet="Lesson">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Mark">
+            <EntityTypeMapping TypeName="uniDBModel.Mark">
+              <MappingFragment StoreEntitySet="Mark">
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Student">
+            <EntityTypeMapping TypeName="uniDBModel.Student">
+              <MappingFragment StoreEntitySet="Student">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Teacher">
+            <EntityTypeMapping TypeName="uniDBModel.Teacher">
+              <MappingFragment StoreEntitySet="Teacher">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetExamResults" FunctionName="Хранилище uniDBModel.GetExamResults">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="uniDBModel.GetExamResults_Result">
+                <ScalarProperty Name="LessonName" ColumnName="LessonName" />
+                <ScalarProperty Name="TeacherName" ColumnName="TeacherName" />
+                <ScalarProperty Name="GroupNum" ColumnName="GroupNum" />
+                <ScalarProperty Name="StudentName" ColumnName="StudentName" />
+                <ScalarProperty Name="MarkVal" ColumnName="MarkVal" />
+                <ScalarProperty Name="MarkName" ColumnName="MarkName" />
+                <ScalarProperty Name="ExamDate" ColumnName="ExamDate" />
+                <ScalarProperty Name="RExamPlanId" ColumnName="RExamPlanId" />
+                <ScalarProperty Name="RStudentId" ColumnName="RStudentId" />
+                <ScalarProperty Name="RTeacherId" ColumnName="RTeacherId" />
+                <ScalarProperty Name="RGroupId" ColumnName="RGroupId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="LoginByUP" FunctionName="Хранилище uniDBModel.LoginByUP">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="uniDBModel.LoginByUP_Result">
+                <ScalarProperty Name="TeId" ColumnName="TeId" />
+                <ScalarProperty Name="LgIn" ColumnName="LgIn" />
+                <ScalarProperty Name="PassWrd" ColumnName="PassWrd" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetResultsAndAvg" FunctionName="Хранилище uniDBModel.GetResultsAndAvg">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="uniDBModel.GetResultsAndAvg_Result">
+                <ScalarProperty Name="StudentName" ColumnName="StudentName" />
+                <ScalarProperty Name="LessonName" ColumnName="LessonName" />
+                <ScalarProperty Name="MarkVal" ColumnName="MarkVal" />
+                <ScalarProperty Name="MarkAVG" ColumnName="MarkAVG" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

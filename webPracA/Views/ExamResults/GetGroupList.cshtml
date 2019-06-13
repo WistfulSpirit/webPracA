@@ -1,0 +1,5 @@
+﻿@model IEnumerable<webPracA.Models.GetExamResults_Result>
+@Scripts.Render("~/scripts/jquery-3.3.1.js")
+@Scripts.Render("~/scripts/jquery.unobtrusive-ajax.js")
+
+@Html.DropDownList("GroupList", null, htmlAttributes: new { @id = "selGroup", @class = "form-control" })

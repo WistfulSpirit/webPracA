@@ -1,0 +1,53 @@
+﻿@model IEnumerable<webPracA.Models.GetResultsAndAvg_Result>
+
+@{
+    ViewBag.Title = "MarkRecords";
+    ViewBag.iN = "";
+}
+
+<h2>Успеваемость группы - @ViewBag.sGR</h2>
+
+<p>
+    @Html.ActionLink("Обратно к списку групп", "Index", "Groups")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            ФИО
+        </th>
+        @foreach (var les in Model.OrderBy(m => m.LessonName).Select(m => m.LessonName).Distinct())
+        {
+            <th>@les</th>
+        }
+        <th>
+            Средняя оценка
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        if (item.StudentName != ViewBag.iN)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentName)
+                </td>
+                @foreach (var les in Model.Where(m => m.StudentName == item.StudentName).OrderBy(m => m.LessonName))
+                {
+                    <td>@les.MarkVal</td>
+                }
+                <td>
+                    @Math.Round((double)item.MarkAVG, 2)
+                </td>
+            </tr>
+            ViewBag.iN = item.StudentName;
+        }
+    }
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td colspan="5" style="text-align:center">Нет результатов</td>
+            <td></td>
+        </tr>
+    }
+</table>

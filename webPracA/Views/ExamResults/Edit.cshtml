@@ -1,0 +1,55 @@
+﻿@model webPracA.Models.ExamResult
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Редактирование</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>ExamResult</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ExamPlanId)
+
+        @Html.HiddenFor(model => model.StudentId)
+        <dl class="dl-horizontal">
+            <dt>
+                Предмет
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ExamPlan.Lesson.Name)
+            </dd>
+
+            <dt>
+                Имя студента
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Student.Name)
+            </dd>
+
+            <dt>Оценка</dt>
+            <dd >
+                @Html.DropDownList("MarkVal", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MarkVal, "", new { @class = "text-danger" })
+            </dd>
+
+        </dl>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Сохранить" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Обратно к списку", "Index", new { lId = Model.ExamPlan.LessonId, gId = Model.ExamPlan.GroupId})
+</div>
